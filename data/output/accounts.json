@@ -1,0 +1,72 @@
+[
+  {
+    "accountId": "ACC001",
+    "customerName": "Rohan Gupta",
+    "accountType": "current",
+    "country": "IN",
+    "createdAt": "2026-09-02T17:41:10.073Z"
+  },
+  {
+    "accountId": "ACC002",
+    "customerName": "Arjun Sharma",
+    "accountType": "savings",
+    "country": "IN",
+    "createdAt": "2026-09-02T17:41:10.078Z"
+  },
+  {
+    "accountId": "ACC003",
+    "customerName": "Neha Verma",
+    "accountType": "current",
+    "country": "IN",
+    "createdAt": "2026-09-02T17:41:10.078Z"
+  },
+  {
+    "accountId": "ACC004",
+    "customerName": "Arjun Sharma",
+    "accountType": "savings",
+    "country": "IN",
+    "createdAt": "2026-09-02T17:41:10.078Z"
+  },
+  {
+    "accountId": "ACC005",
+    "customerName": "Rohan Gupta",
+    "accountType": "current",
+    "country": "IN",
+    "createdAt": "2026-09-02T17:41:10.078Z"
+  },
+  {
+    "accountId": "ACC006",
+    "customerName": "Rahul Kumar",
+    "accountType": "savings",
+    "country": "IN",
+    "createdAt": "2026-09-02T17:41:10.078Z"
+  },
+  {
+    "accountId": "ACC007",
+    "customerName": "Rohan Gupta",
+    "accountType": "savings",
+    "country": "IN",
+    "createdAt": "2026-09-02T17:41:10.078Z"
+  },
+  {
+    "accountId": "ACC008",
+    "customerName": "Rohan Gupta",
+    "accountType": "current",
+    "country": "IN",
+    "createdAt": "2026-09-02T17:41:10.078Z"
+  },
+  {
+    "accountId": "ACC009",
+    "customerName": "Rahul Kumar",
+    "accountType": "savings",
+    "country": "IN",
+    "createdAt": "2026-09-02T17:41:10.078Z"
+  },
+  {
+    "accountId": "ACC010",
+    "customerName": "Ananya Singh",
+    "accountType": "savings",
+    "country": "IN",
+    "createdAt": "2026-09-02T17:41:10.078Z"
+  }
+]

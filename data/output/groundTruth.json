@@ -1,0 +1,18 @@
+[
+  {
+    "scenarioId": "CYCLE_001",
+    "pattern": "circular_flow",
+    "accountIds": [
+      "ACC001",
+      "ACC002",
+      "ACC003",
+      "ACC004"
+    ],
+    "transactionIds": [
+      "TX031",
+      "TX032",
+      "TX033",
+      "TX034"
+    ]
+  }
+]
