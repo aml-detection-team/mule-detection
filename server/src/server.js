@@ -1,17 +1,11 @@
 import express from "express";
-import detectTransactions from "./controllers/detectionController.js";
+import detectionRoutes from "./routes/detection.js";
 
 const app = express();
 
 app.use(express.json());
 
-app.get("/", (req, res) => {
-    res.json({
-        message: "Mule Detection API is running"
-    });
-});
-
-app.post("/api/detect", detectTransactions);
+app.use("/api/detection", detectionRoutes);
 
 const PORT = 5000;
 

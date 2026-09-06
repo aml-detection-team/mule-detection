@@ -1,54 +1,82 @@
-function calculateRiskScore(circularFlow) {
+function calculateRiskScore(
+    circularFlow,
+    rapidMoneyMovements
+) {
     let score = 0;
     const reasons = [];
 
-    if (!circularFlow) {
-        return {
-            score: 0,
-            riskLevel: "LOW",
-            reasons: []
-        };
-    }
+    // --------------------------------
+    // 1. Circular money flow
+    // --------------------------------
 
-    // Circular money flow detected
-    score += 40;
-
-    reasons.push("Circular money flow detected");
-
-    // Multiple accounts involved in the cycle
-    if (circularFlow.accountIds.length >= 4) {
-        score += 20;
+    if (circularFlow) {
+        score += 40;
 
         reasons.push(
-            `${circularFlow.accountIds.length} accounts involved in the cycle`
+            "Circular money flow detected"
+        );
+
+        // 4 or more accounts involved
+        if (circularFlow.accountIds.length >= 4) {
+            score += 20;
+
+            reasons.push(
+                `${circularFlow.accountIds.length} accounts involved in the cycle`
+            );
+        }
+
+        // 4 or more transactions involved
+        if (circularFlow.transactionIds.length >= 4) {
+            score += 20;
+
+            reasons.push(
+                `${circularFlow.transactionIds.length} transactions involved in the cycle`
+            );
+        }
+
+        // Same amount across the cycle
+        const amounts =
+            circularFlow.transactions.map(
+                transaction => transaction.amount
+            );
+
+        const allAmountsSame =
+            amounts.every(
+                amount => amount === amounts[0]
+            );
+
+        if (allAmountsSame) {
+            score += 20;
+
+            reasons.push(
+                `Same transaction amount across the cycle: ₹${amounts[0]}`
+            );
+        }
+    }
+
+    // --------------------------------
+    // 2. Rapid money movement
+    // --------------------------------
+
+    if (rapidMoneyMovements.length > 0) {
+        score += 10;
+
+        reasons.push(
+            `${rapidMoneyMovements.length} rapid money movements detected`
         );
     }
 
-    // Multiple transactions involved
-    if (circularFlow.transactionIds.length >= 4) {
-        score += 20;
+    // --------------------------------
+    // Prevent score from exceeding 100
+    // --------------------------------
 
-        reasons.push(
-            `${circularFlow.transactionIds.length} transactions involved in the cycle`
-        );
+    if (score > 100) {
+        score = 100;
     }
 
-    // Same transaction amount across the cycle
-    const amounts = circularFlow.transactions.map(
-        transaction => transaction.amount
-    );
-
-    const allAmountsSame = amounts.every(
-        amount => amount === amounts[0]
-    );
-
-    if (allAmountsSame) {
-        score += 20;
-
-        reasons.push(
-            `Same transaction amount across the cycle: ₹${amounts[0]}`
-        );
-    }
+    // --------------------------------
+    // Determine risk level
+    // --------------------------------
 
     if (score >= 80) {
         return {
