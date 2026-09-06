@@ -1,56 +1,86 @@
 function calculateRiskScore(
-    circularFlow,
+    circularFlows,
     rapidMoneyMovements
 ) {
+
     let score = 0;
+
     const reasons = [];
 
     // --------------------------------
-    // 1. Circular money flow
+    // 1. Circular money flows
     // --------------------------------
 
-    if (circularFlow) {
+    if (circularFlows.length > 0) {
+
+        // Base score for detecting circular flow
         score += 40;
 
         reasons.push(
-            "Circular money flow detected"
+            `${circularFlows.length} circular money flow(s) detected`
         );
 
-        // 4 or more accounts involved
-        if (circularFlow.accountIds.length >= 4) {
-            score += 20;
+        // --------------------------------
+        // Examine each cycle
+        // --------------------------------
 
-            reasons.push(
-                `${circularFlow.accountIds.length} accounts involved in the cycle`
-            );
-        }
+        for (const circularFlow of circularFlows) {
 
-        // 4 or more transactions involved
-        if (circularFlow.transactionIds.length >= 4) {
-            score += 20;
+            // --------------------------------
+            // Number of accounts
+            // --------------------------------
 
-            reasons.push(
-                `${circularFlow.transactionIds.length} transactions involved in the cycle`
-            );
-        }
+            if (
+                circularFlow.accountIds.length >= 4
+            ) {
 
-        // Same amount across the cycle
-        const amounts =
-            circularFlow.transactions.map(
-                transaction => transaction.amount
-            );
+                score += 10;
 
-        const allAmountsSame =
-            amounts.every(
-                amount => amount === amounts[0]
-            );
+                reasons.push(
+                    `${circularFlow.accountIds.length} accounts involved in a circular flow`
+                );
+            }
 
-        if (allAmountsSame) {
-            score += 20;
+            // --------------------------------
+            // Number of transactions
+            // --------------------------------
 
-            reasons.push(
-                `Same transaction amount across the cycle: ₹${amounts[0]}`
-            );
+            if (
+                circularFlow.transactionIds.length >= 4
+            ) {
+
+                score += 10;
+
+                reasons.push(
+                    `${circularFlow.transactionIds.length} transactions involved in a circular flow`
+                );
+            }
+
+            // --------------------------------
+            // Same amount
+            // --------------------------------
+
+            const amounts =
+                circularFlow.transactions.map(
+                    transaction =>
+                        transaction.amount
+                );
+
+            const allAmountsSame =
+                amounts.length > 0 &&
+                amounts.every(
+                    amount =>
+                        amount === amounts[0]
+                );
+
+            if (allAmountsSame) {
+
+                score += 10;
+
+                reasons.push(
+                    `Same transaction amount across the cycle: ₹${amounts[0]}`
+                );
+            }
         }
     }
 
@@ -58,7 +88,10 @@ function calculateRiskScore(
     // 2. Rapid money movement
     // --------------------------------
 
-    if (rapidMoneyMovements.length > 0) {
+    if (
+        rapidMoneyMovements.length > 0
+    ) {
+
         score += 10;
 
         reasons.push(
@@ -67,10 +100,11 @@ function calculateRiskScore(
     }
 
     // --------------------------------
-    // Prevent score from exceeding 100
+    // Prevent score > 100
     // --------------------------------
 
     if (score > 100) {
+
         score = 100;
     }
 
@@ -79,6 +113,7 @@ function calculateRiskScore(
     // --------------------------------
 
     if (score >= 80) {
+
         return {
             score,
             riskLevel: "CRITICAL",
@@ -87,6 +122,7 @@ function calculateRiskScore(
     }
 
     if (score >= 60) {
+
         return {
             score,
             riskLevel: "HIGH",
@@ -95,6 +131,7 @@ function calculateRiskScore(
     }
 
     if (score >= 30) {
+
         return {
             score,
             riskLevel: "MEDIUM",

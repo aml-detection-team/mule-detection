@@ -1,111 +1,153 @@
-function generateAccountRisk(circularFlow, rapidMoneyMovements) {
-    const accountRiskMap = {};
+function generateAccountRisk(
+    circularFlows,
+    rapidMoneyMovements
+) {
+
+    const accountRisk = {};
 
     // --------------------------------
-    // 1. Add accounts involved in cycle
+    // Process circular flows
     // --------------------------------
 
-    if (circularFlow) {
+    for (const circularFlow of circularFlows) {
+
         for (const accountId of circularFlow.accountIds) {
-            accountRiskMap[accountId] = {
-                accountId,
-                riskScore: 40,
-                reasons: [
+
+            if (!accountRisk[accountId]) {
+
+                accountRisk[accountId] = {
+                    accountId,
+                    score: 0,
+                    reasons: []
+                };
+            }
+
+            // Circular flow involvement
+            accountRisk[accountId].score += 40;
+
+            if (
+                !accountRisk[accountId].reasons.includes(
                     "Participated in circular money flow"
-                ]
-            };
+                )
+            ) {
+                accountRisk[accountId].reasons.push(
+                    "Participated in circular money flow"
+                );
+            }
 
-            // 4+ accounts
+            // Large cycle
             if (circularFlow.accountIds.length >= 4) {
-                accountRiskMap[accountId].riskScore += 10;
 
-                accountRiskMap[accountId].reasons.push(
-                    "Part of a cycle involving 4 or more accounts"
-                );
+                accountRisk[accountId].score += 10;
+
+                const reason =
+                    `${circularFlow.accountIds.length} accounts involved in cycle`;
+
+                if (
+                    !accountRisk[accountId].reasons.includes(reason)
+                ) {
+                    accountRisk[accountId].reasons.push(reason);
+                }
             }
 
-            // 4+ transactions
-            if (circularFlow.transactionIds.length >= 4) {
-                accountRiskMap[accountId].riskScore += 10;
-
-                accountRiskMap[accountId].reasons.push(
-                    "Part of a cycle involving 4 or more transactions"
+            // Same transaction amount
+            const amounts =
+                circularFlow.transactions.map(
+                    transaction =>
+                        transaction.amount
                 );
-            }
 
-            // Same amount across cycle
-            const amounts = circularFlow.transactions.map(
-                transaction => transaction.amount
-            );
-
-            const allAmountsSame = amounts.every(
-                amount => amount === amounts[0]
-            );
+            const allAmountsSame =
+                amounts.length > 0 &&
+                amounts.every(
+                    amount =>
+                        amount === amounts[0]
+                );
 
             if (allAmountsSame) {
-                accountRiskMap[accountId].riskScore += 10;
 
-                accountRiskMap[accountId].reasons.push(
-                    `Same transaction amount across cycle: ₹${amounts[0]}`
-                );
+                accountRisk[accountId].score += 10;
+
+                const reason =
+                    `Same transaction amount across cycle: ₹${amounts[0]}`;
+
+                if (
+                    !accountRisk[accountId].reasons.includes(reason)
+                ) {
+                    accountRisk[accountId].reasons.push(reason);
+                }
             }
         }
     }
 
     // --------------------------------
-    // 2. Add rapid money movement risk
+    // Process rapid money movements
     // --------------------------------
 
     for (const movement of rapidMoneyMovements) {
-        const accountId = movement.accountId;
 
-        // If account hasn't appeared before,
-        // create it with score 0
-        if (!accountRiskMap[accountId]) {
-            accountRiskMap[accountId] = {
+        const accountId =
+            movement.accountId;
+
+        if (!accountRisk[accountId]) {
+
+            accountRisk[accountId] = {
                 accountId,
-                riskScore: 0,
+                score: 0,
                 reasons: []
             };
         }
 
-        // Each rapid movement = +5
-        accountRiskMap[accountId].riskScore += 5;
+        accountRisk[accountId].score += 10;
 
-        accountRiskMap[accountId].reasons.push(
-            `Rapid money movement detected: ${movement.incomingTransactionId} → ${movement.outgoingTransactionId}`
-        );
-    }
-
-    // --------------------------------
-    // 3. Cap score at 100
-    // --------------------------------
-
-    for (const accountId in accountRiskMap) {
-        if (accountRiskMap[accountId].riskScore > 100) {
-            accountRiskMap[accountId].riskScore = 100;
+        if (
+            !accountRisk[accountId].reasons.includes(
+                "Rapid money movement detected"
+            )
+        ) {
+            accountRisk[accountId].reasons.push(
+                "Rapid money movement detected"
+            );
         }
     }
 
     // --------------------------------
-    // 4. Determine risk level
+    // Cap account scores at 100
     // --------------------------------
 
-    for (const accountId in accountRiskMap) {
-        const score = accountRiskMap[accountId].riskScore;
+    for (const accountId in accountRisk) {
+
+        if (accountRisk[accountId].score > 100) {
+
+            accountRisk[accountId].score = 100;
+        }
+
+        const score =
+            accountRisk[accountId].score;
 
         if (score >= 80) {
-            accountRiskMap[accountId].riskLevel = "CRITICAL";
+
+            accountRisk[accountId].riskLevel =
+                "CRITICAL";
+
         } else if (score >= 60) {
-            accountRiskMap[accountId].riskLevel = "HIGH";
+
+            accountRisk[accountId].riskLevel =
+                "HIGH";
+
         } else if (score >= 30) {
-            accountRiskMap[accountId].riskLevel = "MEDIUM";
+
+            accountRisk[accountId].riskLevel =
+                "MEDIUM";
+
         } else {
-            accountRiskMap[accountId].riskLevel = "LOW";
+
+            accountRisk[accountId].riskLevel =
+                "LOW";
         }
     }
 
-    return Object.values(accountRiskMap);
+    return Object.values(accountRisk);
 }
 
 export default generateAccountRisk;
