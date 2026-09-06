@@ -1,40 +1,53 @@
-const fs = require("fs");
+const accounts = require("../output/accounts.json");
 
-const cycleAccounts = [
-    "ACC001",
-    "ACC002",
-    "ACC003",
-    "ACC004"
-];
-const cycleTransactions = [];
+function generateCycle(scenarioNumber) {
+  const cycleSize = Math.floor(Math.random() * 3) + 4;
 
-for (let i = 0; i < cycleAccounts.length; i++){
-  const fromAccount = cycleAccounts[i];
-  const toAccount = cycleAccounts[(i + 1) % cycleAccounts.length];
-  const transaction = {
-    transactionId: "TX" + (31 + i).toString().padStart(3, "0"),
-    fromAccount,
-    toAccount,
-    amount: 25000,
-    currency: "INR",
-    timestamp: new Date().toISOString()
-  };
-  cycleTransactions.push(transaction);
+  const cycleAccounts = [];
 
-}
-const groundTruth = {
-    scenarioId: "CYCLE_001",
+  while (cycleAccounts.length < cycleSize) {
+    const randomIndex = Math.floor(Math.random() * accounts.length);
+
+    const accountId = accounts[randomIndex].accountId;
+
+    if (!cycleAccounts.includes(accountId)) {
+      cycleAccounts.push(accountId);
+    }
+  }
+
+  const cycleTransactions = [];
+
+  for (let i = 0; i < cycleAccounts.length; i++) {
+    const fromAccount = cycleAccounts[i];
+
+    const toAccount = cycleAccounts[(i + 1) % cycleAccounts.length];
+
+    const transaction = {
+      transactionId:
+        "CYCLE_" + String(scenarioNumber).padStart(3, "0") + "_TX_" + (i + 1),
+      fromAccount,
+      toAccount,
+      amount: 25000,
+      currency: "INR",
+      timestamp: new Date().toISOString(),
+    };
+
+    cycleTransactions.push(transaction);
+  }
+
+  const groundTruth = {
+    scenarioId: "CYCLE_" + String(scenarioNumber).padStart(3, "0"),
     pattern: "circular_flow",
     accountIds: cycleAccounts,
-    transactionIds: cycleTransactions.map(transaction => transaction.transactionId)
-};
-fs.writeFileSync(
-    "data/output/cycleTransactions.json",
-    JSON.stringify(cycleTransactions, null, 2)
-);
-fs.writeFileSync(
-    "data/output/groundTruth.json",
-    JSON.stringify([groundTruth], null, 2)
-);
-//console.log(groundTruth)
-//console.log(cycleTransactions);
+    transactionIds: cycleTransactions.map(
+      (transaction) => transaction.transactionId,
+    ),
+  };
+
+  return {
+    transactions: cycleTransactions,
+    groundTruth,
+  };
+}
+
+module.exports = generateCycle;
