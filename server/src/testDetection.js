@@ -1,9 +1,34 @@
 import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
 import analyzeTransactions from "./services/detection/analyzetransactions.js";
+
+// --------------------------------
+// Get current file directory
+// --------------------------------
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// --------------------------------
+// Transactions file path
+// --------------------------------
+
+const transactionsPath = path.resolve(
+    __dirname,
+    "../../data/output/transactions.json"
+);
+
+console.log("Loading transactions from:");
+console.log(transactionsPath);
+
+// --------------------------------
+// Load transactions
+// --------------------------------
 
 const transactions = JSON.parse(
     fs.readFileSync(
-        "data/output/transactions.json",
+        transactionsPath,
         "utf-8"
     )
 );
