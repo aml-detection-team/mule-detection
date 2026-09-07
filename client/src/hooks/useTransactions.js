@@ -1,5 +1,8 @@
-import { useState, useEffect, useCallback } from 'react';
-import { checkServerHealth, detectMuleTransactions } from '../services/api';
+import { useCallback, useEffect, useState } from 'react';
+import {
+  checkServerHealth,
+  detectMuleTransactions,
+} from '../services/api';
 
 export function useTransactions() {
   const [transactions, setTransactions] = useState([]);
@@ -8,25 +11,38 @@ export function useTransactions() {
   const [error, setError] = useState(null);
   const [isBackendOnline, setIsBackendOnline] = useState(false);
 
-  // Check backend connectivity on mount
+  // Check backend connectivity when the application starts
   useEffect(() => {
     async function verifyBackend() {
       const status = await checkServerHealth();
-      setIsBackendOnline(Boolean(status));
+
+      if (status) {
+        setIsBackendOnline(true);
+        setDetectionResults(status);
+      } else {
+        setIsBackendOnline(false);
+      }
     }
+
     verifyBackend();
   }, []);
 
-  // Run detection against transactions
-  const runDetection = useCallback(async (txData) => {
+  // Run detection using the backend detection engine
+  const runDetection = useCallback(async () => {
     setLoading(true);
     setError(null);
+
     try {
-      const results = await detectMuleTransactions(txData);
+      const results = await detectMuleTransactions();
+
       setDetectionResults(results);
+      setIsBackendOnline(true);
+
       return results;
     } catch (err) {
       setError(err.message || 'Detection failed');
+      setIsBackendOnline(false);
+
       throw err;
     } finally {
       setLoading(false);

@@ -13,21 +13,18 @@ function calculateRiskScore(
 
     if (circularFlows.length > 0) {
 
-        // Base score for detecting circular flow
+        // Base score
         score += 40;
 
         reasons.push(
             `${circularFlows.length} circular money flow(s) detected`
         );
 
-        // --------------------------------
-        // Examine each cycle
-        // --------------------------------
-
+        // Examine each circular flow
         for (const circularFlow of circularFlows) {
 
             // --------------------------------
-            // Number of accounts
+            // Large cycle
             // --------------------------------
 
             if (
@@ -42,7 +39,7 @@ function calculateRiskScore(
             }
 
             // --------------------------------
-            // Number of transactions
+            // Many transactions
             // --------------------------------
 
             if (
@@ -92,11 +89,42 @@ function calculateRiskScore(
         rapidMoneyMovements.length > 0
     ) {
 
+        // Give a base score for rapid movement
         score += 10;
 
         reasons.push(
-            `${rapidMoneyMovements.length} rapid money movements detected`
+            `${rapidMoneyMovements.length} rapid money movement(s) detected`
         );
+
+        // --------------------------------
+        // Multiple rapid movements
+        // --------------------------------
+
+        if (
+            rapidMoneyMovements.length >= 5
+        ) {
+
+            score += 10;
+
+            reasons.push(
+                "High number of rapid money movements detected"
+            );
+        }
+
+        // --------------------------------
+        // Very high rapid activity
+        // --------------------------------
+
+        if (
+            rapidMoneyMovements.length >= 10
+        ) {
+
+            score += 10;
+
+            reasons.push(
+                "Very high rapid money movement activity detected"
+            );
+        }
     }
 
     // --------------------------------
