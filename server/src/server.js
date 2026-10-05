@@ -1,9 +1,13 @@
-import connectDB from "./config/db.js";
+import { pathToFileURL } from "node:url";
+import { resolve } from "node:path";
 import express from "express";
+import connectDB from "./config/db.js";
 import aiRoutes from "./routes/aiRoutes.js";
-import detectTransactions from "./controllers/detectionController.js";
 import accountRoutes from "./routes/accountRoutes.js";
+import detectionRoutes from "./routes/detectionRoutes.js";
+import flagRoutes from "./routes/flagRoutes.js";
 import transactionRoutes from "./routes/transactionRoutes.js";
+import { errorHandler } from "./middleware/errorHandler.js";
 
 const app = express();
 
@@ -15,20 +19,40 @@ app.get("/", (req, res) => {
   });
 });
 
-app.post("/api/detect", detectTransactions);
-
-const PORT = 8000;
-
 app.use("/api/accounts", accountRoutes);
 app.use("/api/transactions", transactionRoutes);
+app.use("/api/flags", flagRoutes);
+app.use("/api/detect", detectionRoutes);
 app.use("/api/ai", aiRoutes);
 
-const startServer = async () => {
+// Keep API errors consistently formatted, including errors from async routes.
+app.use((req, res) => {
+  res.status(404).json({ message: "Route not found" });
+});
+app.use(errorHandler);
+
+async function startServer() {
   await connectDB();
 
-  app.listen(PORT, () => {
-    console.log(`Server running on http://localhost:${PORT}`);
+  const port = Number(process.env.PORT) || 8000;
+  const server = app.listen(port, "0.0.0.0", () => {
+    console.log(`Server listening on port ${port}`);
   });
-};
 
-startServer();
+  return server;
+}
+
+// Exporting the app lets integration tests exercise the real routes without
+// starting another server or requiring a database connection on import.
+export { app, startServer };
+
+const isMainModule =
+  process.argv[1] &&
+  import.meta.url === pathToFileURL(resolve(process.argv[1])).href;
+
+if (isMainModule) {
+  startServer().catch((error) => {
+    console.error("Unable to start the API:", error.message);
+    process.exitCode = 1;
+  });
+}
