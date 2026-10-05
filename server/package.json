@@ -8,7 +8,8 @@
   },
   "scripts": {
     "start": "node src/server.js",
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
+    "seed:demo": "node scripts/seedDemoData.js",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --runInBand"
   },
   "keywords": [],
   "author": "",

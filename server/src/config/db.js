@@ -1,13 +1,28 @@
-import "dotenv/config";
+import dotenv from "dotenv";
 import mongoose from "mongoose";
+import { fileURLToPath } from "node:url";
 
-const connectDB = async () => {
+// Load server/.env even when the backend is started from the repository root.
+dotenv.config({
+  path: fileURLToPath(new URL("../../.env", import.meta.url)),
+  quiet: true,
+});
+
+const connectDB = async (uri = process.env.MONGO_URI) => {
+  if (!uri) {
+    throw new Error(
+      "MONGO_URI is not set. Add it to server/.env or the process environment.",
+    );
+  }
+
   try {
-    await mongoose.connect(process.env.MONGO_URI);
-    console.log("MongoDB Connected");
+    await mongoose.connect(uri);
+    console.log("MongoDB connected");
+    return mongoose.connection;
   } catch (error) {
-    console.error("Connection to MongoDB failed:", error.message);
-    process.exit(1);
+    // Do not log the connection string; it may contain credentials.
+    console.error("MongoDB connection failed:", error.message);
+    throw error;
   }
 };
 

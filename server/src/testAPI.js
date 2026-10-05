@@ -1,9 +1,17 @@
-import analyzeTransactions from "./services/detection/analyzetransactions.js";
-import transactions from "../../data/output/transactions.json" with { type: "json" };
+const port = Number(process.env.PORT) || 8000;
+const apiUrl = process.env.API_URL || `http://localhost:${port}/api/detect`;
 
-console.log("Starting API test...");
+// The backend loads transactions from MongoDB when no request body is sent.
+const response = await fetch(apiUrl, {
+  method: "POST",
+});
 
-const result = analyzeTransactions(transactions);
+const result = await response.json();
 
 console.log("API result:");
 console.dir(result, { depth: null });
+
+if (!response.ok) {
+  console.error(`Detection request failed with status ${response.status}`);
+  process.exitCode = 1;
+}
