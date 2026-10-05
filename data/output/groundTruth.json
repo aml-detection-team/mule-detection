@@ -3,157 +3,179 @@
     "scenarioId": "CYCLE_001",
     "pattern": "circular_flow",
     "accountIds": [
-      "ACC081",
-      "ACC100",
-      "ACC088",
-      "ACC065",
-      "ACC002"
+      "ACC091",
+      "ACC013",
+      "ACC087",
+      "ACC019",
+      "ACC047"
     ],
     "transactionIds": [
-      "TX0403",
-      "TX0474",
-      "TX1044",
-      "TX0511",
-      "TX0440"
+      "TX0885",
+      "TX0684",
+      "TX1009",
+      "TX0785",
+      "TX0865"
     ]
   },
   {
     "scenarioId": "CYCLE_002",
     "pattern": "circular_flow",
     "accountIds": [
-      "ACC066",
-      "ACC097",
-      "ACC039",
-      "ACC036",
-      "ACC079"
+      "ACC089",
+      "ACC070",
+      "ACC081",
+      "ACC013"
     ],
     "transactionIds": [
-      "TX0987",
-      "TX0441",
-      "TX0488",
-      "TX0902",
-      "TX0370"
+      "TX0524",
+      "TX0295",
+      "TX0626",
+      "TX0377"
     ]
   },
   {
     "scenarioId": "FANIN_001",
     "pattern": "fan_in",
     "accountIds": [
-      "ACC029",
-      "ACC018",
-      "ACC002",
-      "ACC019",
-      "ACC049",
-      "ACC061"
+      "ACC069",
+      "ACC070",
+      "ACC001",
+      "ACC066",
+      "ACC093",
+      "ACC091"
     ],
     "transactionIds": [
-      "TX0657",
-      "TX0844",
-      "TX0393",
-      "TX0425",
-      "TX0432"
+      "TX0704",
+      "TX0710",
+      "TX0585",
+      "TX0965",
+      "TX0681"
     ]
   },
   {
     "scenarioId": "FANIN_002",
     "pattern": "fan_in",
     "accountIds": [
-      "ACC038",
-      "ACC080",
-      "ACC082",
-      "ACC022",
-      "ACC003"
+      "ACC057",
+      "ACC024",
+      "ACC043",
+      "ACC025",
+      "ACC047",
+      "ACC087",
+      "ACC089"
     ],
     "transactionIds": [
-      "TX0950",
-      "TX0562",
-      "TX0447",
-      "TX0809"
-    ]
-  },
-  {
-    "scenarioId": "FANIN_003",
-    "pattern": "fan_in",
-    "accountIds": [
-      "ACC089",
-      "ACC040",
-      "ACC009",
-      "ACC028",
-      "ACC045"
-    ],
-    "transactionIds": [
-      "TX0648",
-      "TX0361",
-      "TX0982",
-      "TX0486"
+      "TX0596",
+      "TX0647",
+      "TX0590",
+      "TX0299",
+      "TX1037",
+      "TX0358"
     ]
   },
   {
     "scenarioId": "FANOUT_001",
     "pattern": "fan_out",
     "accountIds": [
-      "ACC076",
-      "ACC094",
-      "ACC057",
-      "ACC047",
-      "ACC009",
-      "ACC061"
+      "ACC005",
+      "ACC055",
+      "ACC056",
+      "ACC024",
+      "ACC035"
     ],
     "transactionIds": [
-      "TX0864",
-      "TX0528",
-      "TX0601",
-      "TX0857",
-      "TX0819"
+      "TX0442",
+      "TX0306",
+      "TX0908",
+      "TX0702"
     ]
   },
   {
     "scenarioId": "FANOUT_002",
     "pattern": "fan_out",
     "accountIds": [
-      "ACC046",
-      "ACC012",
-      "ACC064",
-      "ACC023",
-      "ACC022"
+      "ACC070",
+      "ACC079",
+      "ACC084",
+      "ACC021",
+      "ACC037",
+      "ACC087"
     ],
     "transactionIds": [
-      "TX0770",
-      "TX0776",
-      "TX1039",
-      "TX0317"
+      "TX0518",
+      "TX0429",
+      "TX0230",
+      "TX0700",
+      "TX0887"
     ]
   },
   {
     "scenarioId": "STRUCTURE_001",
     "pattern": "structuring",
     "accountIds": [
-      "ACC065",
-      "ACC013"
+      "ACC092",
+      "ACC056"
     ],
     "transactionIds": [
-      "TX0963",
-      "TX0591",
-      "TX0836",
-      "TX0835",
-      "TX0883",
-      "TX0906"
+      "TX0387",
+      "TX0263",
+      "TX0738",
+      "TX0249"
     ]
   },
   {
-    "scenarioId": "STRUCTURE_002",
-    "pattern": "structuring",
+    "scenarioId": "RAPID_001",
+    "pattern": "rapid_pass_through",
     "accountIds": [
-      "ACC076",
+      "ACC075",
+      "ACC005",
+      "ACC061",
+      "ACC097",
+      "ACC027",
       "ACC092"
     ],
     "transactionIds": [
-      "TX0996",
-      "TX0933",
-      "TX0993",
-      "TX0622",
-      "TX0574",
-      "TX0573"
+      "TX0884",
+      "TX0977",
+      "TX0830",
+      "TX0988",
+      "TX0991"
+    ]
+  },
+  {
+    "scenarioId": "RAPID_002",
+    "pattern": "rapid_pass_through",
+    "accountIds": [
+      "ACC006",
+      "ACC021",
+      "ACC098",
+      "ACC031",
+      "ACC064",
+      "ACC061"
+    ],
+    "transactionIds": [
+      "TX0225",
+      "TX0770",
+      "TX0803",
+      "TX0864",
+      "TX0902"
+    ]
+  },
+  {
+    "scenarioId": "RAPID_003",
+    "pattern": "rapid_pass_through",
+    "accountIds": [
+      "ACC002",
+      "ACC038",
+      "ACC082",
+      "ACC051",
+      "ACC026"
+    ],
+    "transactionIds": [
+      "TX0179",
+      "TX0441",
+      "TX0911",
+      "TX0556"
     ]
   }
 ]

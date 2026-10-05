@@ -7,19 +7,18 @@
     "test": "tests"
   },
   "scripts": {
-  "start": "node src/server.js",
-  "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
-},
+    "start": "node src/server.js",
+    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
-
-    "openai": "^7.12.1",
-    "mongoose": "^9.9.5"
-
+    "mongoose": "^9.9.5",
+    "openai": "^7.12.1"
   },
   "type": "module",
   "devDependencies": {

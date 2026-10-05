@@ -1,56 +1,147 @@
-function calculateRiskScore(circularFlow) {
+function calculateRiskScore(
+    circularFlows,
+    rapidMoneyMovements
+) {
+
     let score = 0;
+
     const reasons = [];
 
-    if (!circularFlow) {
-        return {
-            score: 0,
-            riskLevel: "LOW",
-            reasons: []
-        };
-    }
+    // --------------------------------
+    // 1. Circular money flows
+    // --------------------------------
 
-    // Circular money flow detected
-    score += 40;
+    if (circularFlows.length > 0) {
 
-    reasons.push("Circular money flow detected");
-
-    // Multiple accounts involved in the cycle
-    if (circularFlow.accountIds.length >= 4) {
-        score += 20;
+        // Base score
+        score += 40;
 
         reasons.push(
-            `${circularFlow.accountIds.length} accounts involved in the cycle`
+            `${circularFlows.length} circular money flow(s) detected`
         );
+
+        // Examine each circular flow
+        for (const circularFlow of circularFlows) {
+
+            // --------------------------------
+            // Large cycle
+            // --------------------------------
+
+            if (
+                circularFlow.accountIds.length >= 4
+            ) {
+
+                score += 10;
+
+                reasons.push(
+                    `${circularFlow.accountIds.length} accounts involved in a circular flow`
+                );
+            }
+
+            // --------------------------------
+            // Many transactions
+            // --------------------------------
+
+            if (
+                circularFlow.transactionIds.length >= 4
+            ) {
+
+                score += 10;
+
+                reasons.push(
+                    `${circularFlow.transactionIds.length} transactions involved in a circular flow`
+                );
+            }
+
+            // --------------------------------
+            // Same amount
+            // --------------------------------
+
+            const amounts =
+                circularFlow.transactions.map(
+                    transaction =>
+                        transaction.amount
+                );
+
+            const allAmountsSame =
+                amounts.length > 0 &&
+                amounts.every(
+                    amount =>
+                        amount === amounts[0]
+                );
+
+            if (allAmountsSame) {
+
+                score += 10;
+
+                reasons.push(
+                    `Same transaction amount across the cycle: ₹${amounts[0]}`
+                );
+            }
+        }
     }
 
-    // Multiple transactions involved
-    if (circularFlow.transactionIds.length >= 4) {
-        score += 20;
+    // --------------------------------
+    // 2. Rapid money movement
+    // --------------------------------
+
+    if (
+        rapidMoneyMovements.length > 0
+    ) {
+
+        // Give a base score for rapid movement
+        score += 10;
 
         reasons.push(
-            `${circularFlow.transactionIds.length} transactions involved in the cycle`
+            `${rapidMoneyMovements.length} rapid money movement(s) detected`
         );
+
+        // --------------------------------
+        // Multiple rapid movements
+        // --------------------------------
+
+        if (
+            rapidMoneyMovements.length >= 5
+        ) {
+
+            score += 10;
+
+            reasons.push(
+                "High number of rapid money movements detected"
+            );
+        }
+
+        // --------------------------------
+        // Very high rapid activity
+        // --------------------------------
+
+        if (
+            rapidMoneyMovements.length >= 10
+        ) {
+
+            score += 10;
+
+            reasons.push(
+                "Very high rapid money movement activity detected"
+            );
+        }
     }
 
-    // Same transaction amount across the cycle
-    const amounts = circularFlow.transactions.map(
-        transaction => transaction.amount
-    );
+    // --------------------------------
+    // Prevent score > 100
+    // --------------------------------
 
-    const allAmountsSame = amounts.every(
-        amount => amount === amounts[0]
-    );
+    if (score > 100) {
 
-    if (allAmountsSame) {
-        score += 20;
-
-        reasons.push(
-            `Same transaction amount across the cycle: ₹${amounts[0]}`
-        );
+        score = 100;
     }
+
+    // --------------------------------
+    // Determine risk level
+    // --------------------------------
 
     if (score >= 80) {
+
         return {
             score,
             riskLevel: "CRITICAL",
@@ -59,6 +150,7 @@ function calculateRiskScore(circularFlow) {
     }
 
     if (score >= 60) {
+
         return {
             score,
             riskLevel: "HIGH",
@@ -67,6 +159,7 @@ function calculateRiskScore(circularFlow) {
     }
 
     if (score >= 30) {
+
         return {
             score,
             riskLevel: "MEDIUM",

@@ -1,11 +1,21 @@
 import connectDB from "./config/db.js";
 import express from "express";
+import cors from "cors";
+
 import aiRoutes from "./routes/aiRoutes.js";
 import detectTransactions from "./controllers/detectionController.js";
 import accountRoutes from "./routes/accountRoutes.js";
 import transactionRoutes from "./routes/transactionRoutes.js";
+import detectionRoutes from "./routes/detection.js";
 
 const app = express();
+
+// Allow requests from the React/Vite frontend.
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+  }),
+);
 
 app.use(express.json());
 
@@ -15,7 +25,11 @@ app.get("/", (req, res) => {
   });
 });
 
+// Your existing detection endpoint.
 app.post("/api/detect", detectTransactions);
+
+// B's detection API.
+app.use("/api/detection", detectionRoutes);
 
 const PORT = 8000;
 

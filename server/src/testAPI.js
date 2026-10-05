@@ -1,18 +1,9 @@
-import fs from "fs";
+import analyzeTransactions from "./services/detection/analyzetransactions.js";
+import transactions from "../../data/output/transactions.json" with { type: "json" };
 
-const transactions = JSON.parse(
-    fs.readFileSync("data/output/transactions.json", "utf-8")
-);
+console.log("Starting API test...");
 
-const response = await fetch("http://localhost:5000/api/detect", {
-    method: "POST",
-    headers: {
-        "Content-Type": "application/json"
-    },
-    body: JSON.stringify(transactions)
-});
-
-const result = await response.json();
+const result = analyzeTransactions(transactions);
 
 console.log("API result:");
 console.dir(result, { depth: null });
