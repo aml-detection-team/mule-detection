@@ -10,14 +10,28 @@ import accountRoutes from "./routes/accountRoutes.js";
 import detectionRoutes from "./routes/detectionRoutes.js";
 import legacyDetectionRoutes from "./routes/detection.js";
 import flagRoutes from "./routes/flagRoutes.js";
+import authRoutes from "./routes/authRoutes.js";
+import caseRoutes from "./routes/caseRoutes.js";
 import transactionRoutes from "./routes/transactionRoutes.js";
 import { errorHandler } from "./middleware/errorHandler.js";
 
 const app = express();
 
+function parseCorsOrigins() {
+  const raw = process.env.CORS_ORIGIN || "http://localhost:5173";
+  if (raw.trim() === "*") {
+    return "*";
+  }
+  return raw
+    .split(",")
+    .map((origin) => origin.trim())
+    .filter(Boolean);
+}
+
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: parseCorsOrigins(),
+    credentials: parseCorsOrigins() !== "*",
   }),
 );
 
@@ -32,6 +46,8 @@ app.get("/", (req, res) => {
 app.use("/api/accounts", accountRoutes);
 app.use("/api/transactions", transactionRoutes);
 app.use("/api/flags", flagRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/cases", caseRoutes);
 
 app.use("/api/detect", detectionRoutes);
 
